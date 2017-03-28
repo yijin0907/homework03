@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>homework03</title>
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <style>
+        body {
+            background: #eee;
+        }
+        
+        .axis path,
+        .axis line {
+            fill: none;
+            stroke: black;
+            shape-rendering: auto;
+        }
+        
+        .axis text {
+            font-size: 11px;
+            fill: black;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>homework03-1</h1>
+    <svg id="hw3-1"></svg>
+    <div>
+        <button type="submit" onclick="update()">新增</button>
+        <button type="submit" onclick="remove()">移除</button>
+    </div>
+    <script>
+        // -----------------------homework03-1-----------------------
+        var arr = [85, 60, 99, 49, 77, 82];
+        var w = 600;
+        var h = 200;
+        var p = 30;
+        svg();
+        bind(arr);
+        render();
+
+        function svg() {
+            d3.select("#hw3-1")
+                .attr({
+                    "width": w,
+                    "height": h,
+                })
+        }
+
+        function bind(data) {
+
+            //狀態1
+            var selection = d3.select("#hw3-1")
+                .selectAll("rect")
+                .data(data);
+
+            //狀態2
+            selection.enter()
+                .append("rect");
+
+            //狀態3
+            selection.exit()
+                .remove();
+
+            var selection_text = d3.select("#hw3-1")
+                .selectAll("text")
+                .data(data);
+
+            selection_text.enter()
+                .append("text");
+
+            selection_text.exit()
+                .remove();
+
+        }
+
+        function render() {
+            d3.select("#hw3-1")
+                .selectAll("rect")
+                .attr({
+                    "x": function(d, i) {
+                        return (p + 23 * i);
+                    },
+                    "y": function(d) {
+                        return (h - p - d);
+                    },
+                    "width": 20,
+                    "height": function(d) {
+                        return d;
+                    },
+                    "fill": function(d) {
+                        if (d < 70) {
+                            return "red";
+                        } else {
+                            return "lightgreen";
+                        }
+                    }
+                });
+
+            d3.select("#hw3-1")
+                .selectAll("text")
+                .attr({
+                    "x": function(d, i) {
+                        return (p + 23 * i + 3);
+                    },
+                    "y": function(d) {
+                        return (h - p + 25);
+                    }
+                }).text(function(d) {
+                    return d;
+                });
+        }
+
+        function update() {
+            var num = random(10, 100);
+            arr.push(num);
+            bind(arr);
+            render();
+        }
+
+        function remove() {
+            arr.shift();
+            bind(arr);
+            render();
+        }
+
+        function random(N, M) {
+            var rScale = d3.scale.linear()
+                .domain([0, 1])
+                .rangeRound([N, M]);
+            return rScale(Math.random());
+            // return Math.ceil(Math.random() * (M - N) + N);
+        }
+    </script>
+    <hr>
+    <h1>homework03-2</h1>
+    <script>
+        // -----------------------homework03-2-----------------------
+        var index = ["中國國民黨", "民主進步黨", "時代力量", "無黨團結聯盟", "親民黨"];
+        var color = ["blue", "green", "red", "gray", "yellow"];
+
+        var xScale = d3.scale.ordinal()
+            .domain(index)
+            .range(color);
+
+        console.log(xScale("中國國民黨"));
+        console.log(xScale("民主進步黨"));
+        console.log(xScale("時代力量"));
+        console.log(xScale("無黨團結聯盟"));
+        console.log(xScale("aaa"));
+    </script>
+    <h3>結果呈現於console</h3>
+    <hr>
+    <h1>homework03-3</h1>
+    <svg id="hw3-3" width="900" height="300"></svg>
+    <script>
+        // -----------------------homework03-3-----------------------
+        var dataSetTaipei = [{
+            "date": "2016/8/1",
+            "city": "臺北市",
+            "cid": "A",
+            "industry": "不動產開發業",
+            "platform": "無載具",
+            "number": 1530691,
+            "amount": 2081432419
+        }, {
+            "date": "2016/8/1",
+            "city": "臺北市",
+            "cid": "A",
+            "industry": "批發業",
+            "platform": "無載具",
+            "number": 4142289,
+            "amount": 5565063958
+        }, {
+            "date": "2016/8/1",
+            "city": "臺北市",
+            "cid": "A",
+            "industry": "資料處理及資訊供應服務業",
+            "platform": "無載具",
+            "number": 780708,
+            "amount": 1359622827
+        }, {
+            "date": "2016/8/1",
+            "city": "臺北市",
+            "cid": "A",
+            "industry": "零售業",
+            "platform": "無載具",
+            "number": 64927420,
+            "amount": 19680973217
+        }, {
+            "date": "2016/8/1",
+            "city": "臺北市",
+            "cid": "A",
+            "industry": "電信業",
+            "platform": "無載具",
+            "number": 225300,
+            "amount": 2302012551
+        }, {
+            "date": "2016/8/1",
+            "city": "臺北市",
+            "cid": "A",
+            "industry": "餐飲業",
+            "platform": "無載具",
+            "number": 9855745,
+            "amount": 5193141219
+        }, {
+            "date": "2016/8/1",
+            "city": "臺北市",
+            "cid": "A",
+            "industry": "影片服務、聲音錄製及音樂出版業",
+            "platform": "使用載具",
+            "number": 1518980,
+            "amount": 2606453896
+        }, {
+            "date": "2016/8/1",
+            "city": "臺北市",
+            "cid": "A",
+            "industry": "資料處理及資訊供應服務業",
+            "platform": "使用載具",
+            "number": 3936592,
+            "amount": 2441866930
+        }, {
+            "date": "2016/8/1",
+            "city": "臺北市",
+            "cid": "A",
+            "industry": "零售業",
+            "platform": "使用載具",
+            "number": 9675319,
+            "amount": 4693713798
+        }, {
+            "date": "2016/8/1",
+            "city": "臺北市",
+            "cid": "A",
+            "industry": "電信業",
+            "platform": "使用載具",
+            "number": 15939352,
+            "amount": 15982550394
+        }, {
+            "date": "2016/8/1",
+            "city": "臺北市",
+            "cid": "A",
+            "industry": "電力及燃氣供應業",
+            "platform": "使用載具",
+            "number": 688044,
+            "amount": 6096595655
+        }];
+
+        bind03(dataSetTaipei);
+        render03(dataSetTaipei);
+
+        function bind03(dataSet) {
+            var selection = d3.select("#hw3-3")
+                .selectAll("rect")
+                .data(dataSet);
+            selection.enter().append("rect");
+            selection.exit().remove();
+
+            var selection_text = d3.select("#hw3-3")
+                .selectAll("text")
+                .data(dataSet);
+            selection_text.enter().append("text");
+            selection_text.exit().remove();
+        }
+
+        function render03(dataSet) {
+            var xScale = d3.scale.linear()
+                .domain([d3.min(dataSet, function(d) {
+                    return d.amount;
+                }), d3.max(dataSet, function(d) {
+                    return d.amount;
+                })])
+                .range([5, 300]);
+
+
+            var xAxis = d3.svg.axis()
+                .scale(xScale)
+                .orient("bottom")
+                .ticks(12)
+                .tickFormat(function(d) {
+                    return d / 1000000000 + "G";
+                });
+
+
+            d3.select("#hw3-3")
+                .selectAll("rect")
+                .attr({
+                    x: 300,
+                    y: function(d, i) {
+                        return 10 + 20 * i;
+                    },
+                    width: function(d, i) {
+                        return xScale(d.amount);
+                    },
+                    height: 18,
+                    fill: "red"
+                });
+            d3.select("#hw3-3")
+                .selectAll("text")
+                .attr({
+                    x: 10,
+                    y: function(d, i) {
+                        return 25 + 20 * i;
+                    }
+                }).text(function(d) {
+                    return d.industry;
+                });
+
+            d3.select("#hw3-3")
+                .append("g")
+                .classed("axis", true)
+                .attr("transform", "translate(300,240)")
+                .call(xAxis);
+        }
+    </script>
+    <hr>
+
+    <h1>homework03-4</h1>
+    <svg id="hw3-4"></svg>
+    <script>
+        // 1. 定義width, height, padding, letterList變數
+        var w04 = 900;
+        var h04 = 600;
+        var padding04 = 60;
+        var letterList = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "M", "N", "O", "P", "Q", "T", "U", "V", "W", "X", "Z"];
+
+        //2. 建立svg()畫布環境
+
+        svg04();
+
+        //3. 用d3讀取csv
+        d3.csv("invoice.csv", mid, function(dataSet) {
+
+            bind04(dataSet);
+            render04(dataSet);
+
+        });
+
+        function mid(d) {
+            d.amount = +d.amount;
+            d.number = +d.number;
+            return d;
+        }
+
+        function svg04() {
+            d3.select("#hw3-4")
+                .attr({
+                    width: w04,
+                    height: h04
+                });
+            d3.select("#hw3-4").append("g").append("rect").attr({
+                width: "100%",
+                height: "100%",
+                fill: "white"
+            });
+        }
+
+        //4. 建立bind()
+
+        function bind04(dataSet) {
+            var selection = d3.select("#hw3-4")
+                .selectAll("circle")
+                .data(dataSet);
+
+            selection.enter().append("circle");
+            selection.exit().remove();
+        }
+
+        function render04(dataSet) {
+            //5. 定義xScale,yScale,rScale, fScale比例尺(range目的在決定在svg上位置)
+
+            var xScale = d3.time.scale()
+                .domain([
+                    new Date("2013/01/01"),
+                    new Date("2016/08/01")
+                ])
+                // .domain([new Date(min()), new Date(max())])
+                .range([padding04, w04 - padding04]);
+            var yScale = d3.scale.linear()
+                .domain([0, d3.max(dataSet, function(d) {
+                    return d.number;
+                })])
+                .range([h04 - padding04, padding04]);
+            var rScale = d3.scale.linear()
+                .domain([d3.min(dataSet, function(d) {
+                    return d.amount;
+                }), d3.max(dataSet, function(d) {
+                    return d.amount;
+                })])
+                .range([5, 30]);
+            var fScale = d3.scale.category20();
+
+            var xAxis = d3.svg.axis()
+                .scale(xScale)
+                .orient("bottom")
+                // .ticks(5);
+
+            var yAxis = d3.svg.axis()
+                .scale(yScale)
+                .orient("left")
+                .tickFormat(function(d) {
+                    return d / 10000000 + "億";
+                });
+
+
+
+            //6. 建立render()繪圖
+            d3.select("#hw3-4")
+                .selectAll("circle")
+                .attr({
+                    cx: function(d) {
+                        return xScale(new Date(d.date));
+                    },
+                    cy: function(d) {
+                        return yScale(d.number);
+                    },
+                    r: function(d) {
+                        return rScale(d.amount);
+                    },
+                    fill: function(d) {
+                        return fScale(d.cid);
+                    }
+                })
+            d3.select("#hw3-4")
+                .append("g")
+                .classed("axis", true)
+                .attr("transform", "translate(0," + (h04 - padding04 + 10) + ")")
+                .call(xAxis);
+
+            d3.select("#hw3-4")
+                .append("g")
+                .classed("axis", true)
+                .attr("transform", "translate(" + (padding04 - 10) + ",10)")
+                .call(yAxis);
+        }
+    </script>
+    <hr>
+    <h1>homework03-5</h1>
+    <svg id="hw3-5"></svg>
+    <script>
+        var svg = d3.select("#hw3-5").attr({
+            width: "340",
+            height: "340"
+        });
+
+        svg.append("g").append("rect").attr({
+            fill: "white",
+            width: "100%",
+            height: "100%"
+        });
+
+        //--------------------------------
+
+        var easeArr = ["linear", "quad", "cubic", "sin", "exp", "circle", "elastic", "back", "bounce"];
+
+        bind05(easeArr);
+        render05();
+
+        function bind05(dataSet) {
+            var selection_circle = d3.select("#hw3-5").selectAll("circle").data(dataSet);
+            var selection_text = d3.select("#hw3-5").selectAll("text").data(dataSet);
+            var selection_line = d3.select("#hw3-5").selectAll("line").data(dataSet);
+
+            // 初始化設定
+            selection_line.enter().append("line").attr({
+                x1: 100,
+                y1: function(d, i) {
+                    return 20 + i * 35;
+                },
+                x2: 300,
+                y2: function(d, i) {
+                    return 20 + i * 35;
+                },
+                stroke: "lightgreen"
+            }).text(function(d) {
+                return d;
+            });
+            selection_line.exit().remove();
+
+            selection_circle.enter().append("circle").attr({
+                cx: 100,
+                cy: function(d, i) {
+                    return 20 + i * 35;
+                },
+                r: 15,
+                fill: "gold"
+            });
+            selection_circle.exit().remove();
+
+            selection_text.enter().append("text").attr({
+                x: 5,
+                y: function(d, i) {
+                    return 25 + i * 35;
+                },
+                fill: "black"
+            }).text(function(d) {
+                return d;
+            });
+            selection_text.exit().remove();
+
+
+        }
+
+        function render05() {
+
+            d3.select("#hw3-5").selectAll("circle")
+                .on("click", function(d) {
+                    if (d3.select(this).attr("cx") < 120) {
+                        d3.select(this)
+                            .transition()
+                            .duration(1000)
+                            .ease(d)
+                            .attr({
+                                cx: 300
+                            })
+                    } else {
+                        d3.select(this)
+                            .transition()
+                            .duration(1000)
+                            .ease(d)
+                            .attr({
+                                cx: 100
+                            })
+                    }
+                });
+        }
+    </script>
+</body>
+
+</html>
